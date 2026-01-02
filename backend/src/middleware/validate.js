@@ -5,7 +5,10 @@ const validate = (Schema, input = "body") => {
       req[input] = result.data;
       next();
     } else {
-      next(result.error);
+      const error = new Error("Invalid input");
+      error.status = 400;
+      error.errors = result.error.format();
+      next(error);
     }
   };
 };
