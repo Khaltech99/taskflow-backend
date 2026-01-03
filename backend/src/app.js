@@ -3,6 +3,7 @@ import authRouter from "./routes/auth.routes.js";
 import mongoSanitize from "@exortek/express-mongo-sanitize";
 import { connectDb } from "./config/database.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import workspaceRouter from "./routes/workspace.routes.js";
 
 const app = express();
 
@@ -15,6 +16,7 @@ connectDb();
 
 // Routes
 app.use("/auth", authRouter);
+app.use("/work", workspaceRouter);
 
 app.use(errorHandler);
 export default app;
