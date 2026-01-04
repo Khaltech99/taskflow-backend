@@ -16,7 +16,7 @@ connectDb();
 
 // Routes
 app.use("/auth", authRouter);
-app.use("/work", workspaceRouter);
+app.use("/api", workspaceRouter);
 
 app.use(errorHandler);
 export default app;
