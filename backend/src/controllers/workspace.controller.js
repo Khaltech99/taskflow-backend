@@ -1,4 +1,3 @@
-import { workspaces } from "../models/workspace.model.js";
 import {
   createWorkspaceService,
   getMyWorkSpaceServices,
