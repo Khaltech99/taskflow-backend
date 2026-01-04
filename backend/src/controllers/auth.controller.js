@@ -1,6 +1,7 @@
 import { loginService, registerService } from "../service/auth.service.js";
 import { catchAsync } from "../utils/catchAsync.js";
 
+// Register controller
 export const registerController = catchAsync(async (req, res, next) => {
   const { name, email, password } = req.body;
   const user = await registerService({ name, email, password });
@@ -8,6 +9,7 @@ export const registerController = catchAsync(async (req, res, next) => {
   next();
 });
 
+// login controller
 export const loginController = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
   const user = await loginService({ email, password });
