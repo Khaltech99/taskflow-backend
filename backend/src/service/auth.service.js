@@ -1,4 +1,4 @@
-import { users } from "../mongodb/user.model.js";
+import { users } from "../models/user.model.js";
 import { error } from "../utils/error.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
