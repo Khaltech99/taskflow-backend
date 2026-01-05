@@ -1,4 +1,5 @@
 import {
+  addMemberService,
   createWorkspaceService,
   getMyWorkSpaceServices,
 } from "../service/workspace.service.js";
@@ -37,4 +38,18 @@ export const getMyWorkspaces = catchAsync(async (req, res) => {
     status: "success",
     data: { workspaces: myWorkspaces },
   });
+});
+
+// Add members to workspace
+export const addMembers = catchAsync(async (req, res, next) => {
+  const { userId } = req.body;
+  const { workspaceId } = req.params;
+
+  const addMember = addMemberService({ workspaceId, userId }, next);
+
+  res.status(200).json({
+    status: "success",
+    data: { addMember },
+  });
+  next();
 });
