@@ -4,6 +4,7 @@ import mongoSanitize from "@exortek/express-mongo-sanitize";
 import { connectDb } from "./config/database.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import workspaceRouter from "./routes/workspace.routes.js";
+import projectRouter from "./routes/project.routes.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ connectDb();
 // Routes
 app.use("/auth", authRouter);
 app.use("/api", workspaceRouter);
+app.use("/api", projectRouter);
 
 app.use(errorHandler);
 export default app;
