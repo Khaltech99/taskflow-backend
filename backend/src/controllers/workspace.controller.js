@@ -1,6 +1,7 @@
 import {
   addMemberService,
   createWorkspaceService,
+  deleteWorkSpace,
   getMyWorkSpaceServices,
 } from "../service/workspace.service.js";
 import { catchAsync } from "../utils/catchAsync.js";
@@ -42,14 +43,31 @@ export const getMyWorkspaces = catchAsync(async (req, res) => {
 
 // Add members to workspace
 export const addMembers = catchAsync(async (req, res, next) => {
-  const { userId } = req.body;
+  const { newMemberId } = req.body;
   const { workspaceId } = req.params;
+  const currentUserId = req.user.sub.id;
 
-  const addMember = addMemberService({ workspaceId, userId }, next);
+  const addMember = await addMemberService({
+    workspaceId,
+    newMemberId,
+    currentUserId,
+  });
 
   res.status(200).json({
     status: "success",
     data: { addMember },
   });
-  next();
 });
+
+// delete controller
+
+export const deleteWorkspace = async (req, res) => {
+  const userId = req.user.sub.id;
+  const { workspaceId } = req.params;
+
+  const remainingWorkspacesData = await deleteWorkSpace({
+    userId,
+    workspaceId,
+  });
+  res.status(200).json({ data: remainingWorkspacesData });
+};
