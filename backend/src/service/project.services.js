@@ -13,15 +13,19 @@ export const createProjectService = async ({
   if (!name || !description || !workspaceId || !userId || !members) {
     throw error(400, "All fields are required");
   }
+  // concurrent fetching for good optimization and performance
+  const [user, workspace, foundProject] = await Promise.all([
+    users.findById(userId),
+    workspaces.findById(workspaceId),
+    projects.findOne({ name, workspaceId }),
+  ]);
 
   // Check if the user exists
-  const user = await users.findById(userId);
   if (!user) {
     throw error(404, "User not found");
   }
 
   // Check if workspace exists and user owns it
-  const workspace = await workspaces.findById(workspaceId);
   if (!workspace) {
     throw error(404, "Workspace not found");
   }
@@ -31,7 +35,6 @@ export const createProjectService = async ({
   }
 
   // Check for duplicate project within THIS workspace
-  const foundProject = await projects.findOne({ name, workspaceId });
   if (foundProject) {
     throw error(409, "Project with this name already exists in this workspace");
   }
