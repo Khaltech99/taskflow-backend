@@ -1,0 +1,22 @@
+import { createProjectService } from "../service/project.services.js";
+import { catchAsync } from "../utils/catchAsync.js";
+
+export const createProject = catchAsync(async (req, res) => {
+  const { name, description } = req.body;
+
+  const { workspaceId } = req.params;
+  const userId = req.user.sub.id;
+
+  const project = await createProjectService({
+    name,
+    description,
+    workspaceId,
+    members: [userId],
+    userId,
+  });
+
+  res.status(201).json({
+    status: "success",
+    data: project,
+  });
+});
