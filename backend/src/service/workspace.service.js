@@ -14,19 +14,22 @@ export const createWorkspaceService = async ({
     throw error(400, "All fields are required");
   }
 
-  // check if workspace already exists
-  const existingWorkspace = await workspaces.findOne({ name });
+  // concurrent fetching  for good optimization and performance
+  const [existingWorkspace, workspace] = await Promise.all([
+    workspaces.findOne({ name }),
+    workspaces.create({
+      name,
+      description,
+      owner,
+      members,
+    }),
+  ]);
 
+  // check if workspace already exists
   if (existingWorkspace) {
     throw error(409, "Workspace already exists");
   }
 
-  const workspace = await workspaces.create({
-    name,
-    description,
-    owner,
-    members,
-  });
   return workspace;
 };
 
@@ -58,22 +61,24 @@ export const addMemberService = async ({
     );
   }
 
+  // concurrent fetching  for good optimization and performance
+  const [currentUser, newMember, workspace] = await Promise.all([
+    users.findById(currentUserId),
+    users.findById(newMemberId),
+    workspaces.findById(workspaceId),
+  ]);
+
   // check if the user exists
-  const currentUser = await users.findById(currentUserId);
   if (!currentUser) {
     throw error(404, "User not found");
   }
 
   //  check if the new member exists
-  const newMember = await users.findById(newMemberId);
   if (!newMember) {
     throw error(404, "New member not found");
   }
 
-  const workspace = await workspaces.findById(workspaceId);
-
   // check if workspace exists
-
   if (!workspace) {
     throw error(404, "Workspace not found");
   }
