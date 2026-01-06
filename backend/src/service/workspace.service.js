@@ -30,6 +30,7 @@ export const createWorkspaceService = async ({
   return workspace;
 };
 
+// get workspace for the current user
 export const getMyWorkSpaceServices = async ({ userId }) => {
   if (!userId) {
     throw error(400, "User id is required");
@@ -44,15 +45,29 @@ export const getMyWorkSpaceServices = async ({ userId }) => {
   return userWorkspaces;
 };
 
-export const addMemberService = async ({ workspaceId, userId }) => {
-  if (!workspaceId || !userId) {
-    throw error(400, "Workspace id and user id are required");
+// add member to the current workspace
+export const addMemberService = async ({
+  workspaceId,
+  newMemberId,
+  currentUserId,
+}) => {
+  if (!workspaceId || !newMemberId || !currentUserId) {
+    throw error(
+      400,
+      "Workspace id, new member id and current user id are required"
+    );
   }
 
   // check if the user exists
-  const user = await users.findById(userId);
-  if (!user) {
+  const currentUser = await users.findById(currentUserId);
+  if (!currentUser) {
     throw error(404, "User not found");
+  }
+
+  //  check if the new member exists
+  const newMember = await users.findById(newMemberId);
+  if (!newMember) {
+    throw error(404, "New member not found");
   }
 
   const workspace = await workspaces.findById(workspaceId);
@@ -64,18 +79,41 @@ export const addMemberService = async ({ workspaceId, userId }) => {
   }
 
   // check if the user is the owner
-  if (workspace.owner.toString() !== userId) {
+  if (workspace.owner.toString() !== currentUserId) {
     throw error(403, "You are not authorized to add members to this workspace");
   }
   // check if the user is already a member
-  if (workspace.members.includes(userId)) {
+  if (workspace.members.includes(newMemberId)) {
     throw error(409, "User is already a member of this workspace");
   }
 
   // add the user to the workspace
-  workspace.members.push(userId);
+  workspace.members.push(newMemberId);
 
   await workspace.save();
 
   return workspace;
+};
+
+// delete workspace
+export const deleteWorkSpace = async ({ userId, workspaceId }) => {
+  // 1. Check if the user exists
+  const user = await users.findById(userId);
+  if (!user) {
+    throw error(404, "User not found");
+  }
+
+  // 2. Check if workspace exists
+  const workspace = await workspaces.findById(workspaceId);
+  if (!workspace) {
+    throw error(404, "Workspace not found");
+  }
+
+  if (workspace.owner.toString() !== userId) {
+    throw error(401, "Not authorized to delete this workspace");
+  }
+  // delete the workspace
+  await workspaces.findByIdAndDelete(workspaceId);
+
+  return await workspaces.find({});
 };
