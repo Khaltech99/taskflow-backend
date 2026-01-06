@@ -9,21 +9,26 @@ export const registerService = async ({ name, email, password }) => {
   if (!name || !email || !password) {
     throw error(400, "All fields are required");
   }
-  const existingUser = await users.findOne({ email });
+
+  // concurrent fetching for good optimization and performance
+  const [existingUser, hashedPassword] = await Promise.all([
+    users.findOne({ email }),
+    // hashpassword
+    bcrypt.hash(password, 10),
+  ]);
 
   // check if user exists
   if (existingUser) {
     throw error(409, "User already exists");
   }
-  // hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
 
-  // create new user
-  const newUser = await users.create({
+  // create new user object
+  const newUser = users.create({
     name,
     email,
     password: hashedPassword,
   });
+
   return newUser;
 };
 
@@ -41,7 +46,7 @@ export const loginService = async ({ email, password }) => {
   }
   const token = jwt.sign(
     { sub: { id: user._id, email: user.email } },
-    process.env.JWT_SECRET,
+    JWT_SECRET,
     { expiresIn: "1h" }
   );
   return { user, token };
