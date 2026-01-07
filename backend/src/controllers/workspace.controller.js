@@ -1,7 +1,7 @@
 import {
   addMemberService,
   createWorkspaceService,
-  deleteWorkSpace,
+  deleteWorkSpaceService,
   getMyWorkSpaceServices,
   updateWorkspaceService,
 } from "../service/workspace.service.js";
@@ -65,7 +65,7 @@ export const deleteWorkspace = catchAsync(async (req, res) => {
   const userId = req.user.sub.id;
   const { workspaceId } = req.params;
 
-  const remainingWorkspacesData = await deleteWorkSpace({
+  const remainingWorkspacesData = await deleteWorkSpaceService({
     userId,
     workspaceId,
   });
