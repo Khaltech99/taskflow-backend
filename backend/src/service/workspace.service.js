@@ -48,60 +48,8 @@ export const getMyWorkSpaceServices = async ({ userId }) => {
   return userWorkspaces;
 };
 
-// add member to the current workspace
-export const addMemberService = async ({
-  workspaceId,
-  newMemberId,
-  currentUserId,
-}) => {
-  if (!workspaceId || !newMemberId || !currentUserId) {
-    throw error(
-      400,
-      "Workspace id, new member id and current user id are required"
-    );
-  }
-
-  // concurrent fetching  for good optimization and performance
-  const [currentUser, newMember, workspace] = await Promise.all([
-    users.findById(currentUserId),
-    users.findById(newMemberId),
-    workspaces.findById(workspaceId),
-  ]);
-
-  // check if the user exists
-  if (!currentUser) {
-    throw error(404, "User not found");
-  }
-
-  //  check if the new member exists
-  if (!newMember) {
-    throw error(404, "New member not found");
-  }
-
-  // check if workspace exists
-  if (!workspace) {
-    throw error(404, "Workspace not found");
-  }
-
-  // check if the user is the owner
-  if (workspace.owner.toString() !== currentUserId) {
-    throw error(403, "You are not authorized to add members to this workspace");
-  }
-  // check if the user is already a member
-  if (workspace.members.includes(newMemberId)) {
-    throw error(409, "User is already a member of this workspace");
-  }
-
-  // add the user to the workspace
-  workspace.members.push(newMemberId);
-
-  await workspace.save();
-
-  return workspace;
-};
-
 // delete workspace
-export const deleteWorkSpace = async ({ userId, workspaceId }) => {
+export const deleteWorkSpaceService = async ({ userId, workspaceId }) => {
   // 1. Check if the user exists
   const user = await users.findById(userId);
   if (!user) {
@@ -157,4 +105,56 @@ export const updateWorkspaceService = async ({
   );
 
   return updatedInfo;
+};
+
+// add member to the current workspace
+export const addMemberService = async ({
+  workspaceId,
+  newMemberId,
+  currentUserId,
+}) => {
+  if (!workspaceId || !newMemberId || !currentUserId) {
+    throw error(
+      400,
+      "Workspace id, new member id and current user id are required"
+    );
+  }
+
+  // concurrent fetching  for good optimization and performance
+  const [currentUser, newMember, workspace] = await Promise.all([
+    users.findById(currentUserId),
+    users.findById(newMemberId),
+    workspaces.findById(workspaceId),
+  ]);
+
+  // check if the user exists
+  if (!currentUser) {
+    throw error(404, "User not found");
+  }
+
+  //  check if the new member exists
+  if (!newMember) {
+    throw error(404, "New member not found");
+  }
+
+  // check if workspace exists
+  if (!workspace) {
+    throw error(404, "Workspace not found");
+  }
+
+  // check if the user is the owner
+  if (workspace.owner.toString() !== currentUserId) {
+    throw error(403, "You are not authorized to add members to this workspace");
+  }
+  // check if the user is already a member
+  if (workspace.members.includes(newMemberId)) {
+    throw error(409, "User is already a member of this workspace");
+  }
+
+  // add the user to the workspace
+  workspace.members.push(newMemberId);
+
+  await workspace.save();
+
+  return workspace;
 };
