@@ -122,3 +122,30 @@ export const deleteWorkSpace = async ({ userId, workspaceId }) => {
 
   return await workspaces.find({});
 };
+
+// Edit workspace service
+export const updateWorkspaceService = async ({
+  userId,
+  workspaceId,
+  name,
+  description,
+}) => {
+  console.log(userId);
+  const user = await users.findById(userId);
+  if (!user) {
+    throw error(404, "User not found");
+  }
+
+  const workspace = await workspaces.findById(workspaceId);
+  if (!workspace) {
+    throw error(404, "Workspace not found");
+  }
+
+  const updatedInfo = await workspaces.findOneAndUpdate(
+    { owner: userId, _id: workspaceId },
+    { $set: { name: name, description: description } },
+    { new: true }
+  );
+
+  return updatedInfo;
+};
