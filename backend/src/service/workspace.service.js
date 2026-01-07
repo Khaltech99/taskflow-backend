@@ -130,13 +130,17 @@ export const updateWorkspaceService = async ({
   name,
   description,
 }) => {
-  console.log(userId);
-  const user = await users.findById(userId);
+  // concurrent fetching
+  const [user, workspace] = await Promise.all([
+    users.findById(userId),
+    workspaces.findById(workspaceId),
+  ]);
+
+  // check if the user and the workspace exist
   if (!user) {
     throw error(404, "User not found");
   }
 
-  const workspace = await workspaces.findById(workspaceId);
   if (!workspace) {
     throw error(404, "Workspace not found");
   }
