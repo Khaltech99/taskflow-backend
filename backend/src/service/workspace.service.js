@@ -145,6 +145,11 @@ export const updateWorkspaceService = async ({
     throw error(404, "Workspace not found");
   }
 
+  // check if the user is the owner
+  if (userId !== workspace.owner.toString()) {
+    throw error(401, "Not authorized to update this workspace");
+  }
+
   const updatedInfo = await workspaces.findOneAndUpdate(
     { owner: userId, _id: workspaceId },
     { $set: { name: name, description: description } },
