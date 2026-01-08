@@ -57,12 +57,10 @@ export const getProjectService = async ({ workspaceId, userId }) => {
     throw error(404, "Workspace not found");
   }
 
-  const project = await projects.find({ workspaceId: workspaceId });
-  console.log(project.name);
-  console.log(project);
+  const project = await projects.find({ workspaceId });
 
-  if (!project) {
-    throw error(404, "Project not found");
+  if (!project || project.length === 0) {
+    return [];
   }
 
   if (workspace?.owner.toString() !== userId) {
