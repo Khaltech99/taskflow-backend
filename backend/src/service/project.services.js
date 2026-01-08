@@ -30,7 +30,7 @@ export const createProjectService = async ({
     throw error(404, "Workspace not found");
   }
 
-  if (workspace.owner.toString() !== userId) {
+  if (workspace?.owner?.toString() !== userId) {
     throw error(403, "You are not authorized to create a project");
   }
 
@@ -51,19 +51,21 @@ export const createProjectService = async ({
   return newProject;
 };
 
+// get the project per workspace
 export const getProjectService = async ({ workspaceId, userId }) => {
-  const workspace = await workspaces.findById(workspaceId);
+  const [workspace, project] = await Promise.all([
+    workspaces.findById(workspaceId),
+    projects.find({ workspaceId }),
+  ]);
   if (!workspace) {
     throw error(404, "Workspace not found");
   }
 
-  const project = await projects.find({ workspaceId });
-
-  if (!project || project.length === 0) {
+  if (!project || project?.length === 0) {
     return [];
   }
 
-  if (workspace?.owner.toString() !== userId) {
+  if (workspace?.owner?.toString() !== userId) {
     throw error(403, "You are not authorized to get projects");
   }
 
