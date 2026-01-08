@@ -50,3 +50,24 @@ export const createProjectService = async ({
 
   return newProject;
 };
+
+export const getProjectService = async ({ workspaceId, userId }) => {
+  const workspace = await workspaces.findById(workspaceId);
+  if (!workspace) {
+    throw error(404, "Workspace not found");
+  }
+
+  const project = await projects.find({ workspaceId: workspaceId });
+  console.log(project.name);
+  console.log(project);
+
+  if (!project) {
+    throw error(404, "Project not found");
+  }
+
+  if (workspace?.owner.toString() !== userId) {
+    throw error(403, "You are not authorized to get projects");
+  }
+
+  return project;
+};
