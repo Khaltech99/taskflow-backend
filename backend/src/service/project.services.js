@@ -71,3 +71,22 @@ export const getProjectService = async ({ workspaceId, userId }) => {
 
   return project;
 };
+
+// delete project
+export const deleteProjectServices = async ({
+  workspaceId,
+  projectId,
+  userId,
+}) => {
+  const project = await projects.findOneAndDelete({
+    workspaceId,
+    projectId,
+    userId,
+  });
+
+  if (!project) {
+    throw error(404, "Project not found");
+  }
+
+  return project;
+};
