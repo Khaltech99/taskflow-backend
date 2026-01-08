@@ -38,6 +38,8 @@ export const getProject = catchAsync(async (req, res) => {
 
 export const deleteProject = catchAsync(async (req, res) => {
   const { workspaceId, projectId } = req.params;
+  console.log(workspaceId, projectId);
+
   const userId = req.user.sub.id;
   const project = await deleteProjectServices({
     workspaceId,
