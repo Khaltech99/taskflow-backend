@@ -27,7 +27,6 @@ workspaceRouter.delete(
 );
 
 // edit workspace
-
 workspaceRouter.patch("/workspace/:workspaceId", protectedRoute, editWorkspace);
 
 export default workspaceRouter;
