@@ -5,6 +5,7 @@ import { connectDb } from "./config/database.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import workspaceRouter from "./routes/workspace.routes.js";
 import projectRouter from "./routes/project.routes.js";
+import taskRouter from "./routes/task.route.js";
 
 const app = express();
 
@@ -17,8 +18,9 @@ connectDb();
 
 // Routes
 app.use("/auth", authRouter);
-app.use("/api", workspaceRouter);
-app.use("/api", projectRouter);
+app.use("/api/v1", workspaceRouter);
+app.use("/api/v1", projectRouter);
+app.use("/api/v1", taskRouter);
 
 app.use(errorHandler);
 export default app;
