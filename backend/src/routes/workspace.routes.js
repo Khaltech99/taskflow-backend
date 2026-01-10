@@ -11,22 +11,26 @@ import { protectedRoute } from "../middleware/protectedRoute.js";
 const workspaceRouter = Router();
 
 // create workspace
-workspaceRouter.post("/workspace", protectedRoute, createWorkspace);
+workspaceRouter.post("/workspaces", protectedRoute, createWorkspace);
 
 // get workspace
-workspaceRouter.get("/workspace", protectedRoute, getMyWorkspaces);
+workspaceRouter.get("/workspaces", protectedRoute, getMyWorkspaces);
 
 // add members
-workspaceRouter.post("/workspace/:workspaceId", protectedRoute, addMembers);
+workspaceRouter.post("/workspaces/:workspaceId", protectedRoute, addMembers);
 
 // delete workspace
 workspaceRouter.delete(
-  "/workspace/:workspaceId",
+  "/workspaces/:workspaceId",
   protectedRoute,
   deleteWorkspace
 );
 
 // edit workspace
-workspaceRouter.patch("/workspace/:workspaceId", protectedRoute, editWorkspace);
+workspaceRouter.patch(
+  "/workspaces/:workspaceId",
+  protectedRoute,
+  editWorkspace
+);
 
 export default workspaceRouter;
