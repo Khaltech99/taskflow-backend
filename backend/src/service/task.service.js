@@ -16,12 +16,13 @@ export const createTaskService = async ({
   // check if the project exists
   const project = await projects.findById(projectId);
   console.log(project);
+  console.log(memberId);
 
   if (!project) {
     throw error(404, "Project not found");
   }
-  // check if it is the project owner
 
+  // check if it is the project owner
   if (project?.owner.toString() !== userId) {
     throw error(401, "User not authorized for this action");
   }
