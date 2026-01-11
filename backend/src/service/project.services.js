@@ -84,8 +84,6 @@ export const deleteProjectServices = async ({
     owner: userId,
   });
 
-  console.log(project);
-
   if (!project) {
     throw error(404, "Project not found");
   }
