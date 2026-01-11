@@ -41,7 +41,7 @@ export const createTaskService = async ({
 };
 
 // get task service
-export const getTasksService = async ({
+export const getTaskService = async ({
   userId,
   projectId,
   page = 1,
@@ -103,4 +103,21 @@ export const updateTaskService = async ({
   );
 
   return updatedTask;
+};
+
+export const deleteTaskService = async ({ taskId, userId }) => {
+  if (!taskId || !userId) {
+    throw error(400, "invalid data");
+  }
+
+  const allTasks = await tasks.findOne({ owner: userId });
+  const task = await tasks.findOneAndDelete({ owner: userId, _id: taskId });
+  if (task?.length === 0) {
+    throw error(404, "Not found");
+  }
+
+  if (!task) {
+    throw error(404, "Not found");
+  }
+  return allTasks;
 };
