@@ -1,6 +1,7 @@
 import {
   createTaskService,
-  getTasksService,
+  deleteTaskService,
+  getTaskService,
   updateTaskService,
 } from "../service/task.service.js";
 import { catchAsync } from "../utils/catchAsync.js";
@@ -37,7 +38,7 @@ export const getTasks = catchAsync(async (req, res) => {
   const { projectId } = req.body;
   const { page, limit } = req.query;
 
-  const tasks = await getTasksService({
+  const tasks = await getTaskService({
     userId,
     projectId,
     page,
@@ -65,5 +66,17 @@ export const editTask = catchAsync(async (req, res) => {
   res.status(200).json({
     status: "success",
     data: updatedTask,
+  });
+});
+
+export const deleteTask = catchAsync(async (req, res) => {
+  const userId = req.user.sub.id;
+  const { taskId } = req.params;
+
+  const deletedTask = await deleteTaskService({ userId, taskId });
+
+  res.status(200).json({
+    status: "success",
+    data: deletedTask,
   });
 });
