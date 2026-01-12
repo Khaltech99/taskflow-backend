@@ -47,7 +47,9 @@ export const getTaskService = async ({
   page = 1,
   limit = 10,
 }) => {
-  if (!userId || !projectId) throw error(400, "Missing IDs");
+  if (!userId || !projectId) {
+    throw error(400, "Missing IDs");
+  }
 
   // skip calculation
   const skip = (page - 1) * limit;
