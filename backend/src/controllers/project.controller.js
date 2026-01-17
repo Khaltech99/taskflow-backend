@@ -29,8 +29,7 @@ export const getProject = catchAsync(async (req, res) => {
   const { workspaceId } = req.params;
 
   const userId = req.user.sub.id;
-  console.log(workspaceId);
-  console.log(userId);
+
   const projects = await getProjectService({ workspaceId, userId });
 
   res.status(200).json({ success: true, data: projects });
@@ -38,7 +37,6 @@ export const getProject = catchAsync(async (req, res) => {
 
 export const deleteProject = catchAsync(async (req, res) => {
   const { workspaceId, projectId } = req.params;
-  console.log(workspaceId, projectId);
 
   const userId = req.user.sub.id;
   const project = await deleteProjectServices({
