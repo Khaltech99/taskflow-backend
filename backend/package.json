@@ -4,7 +4,7 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watchAll",
     "dev": "nodemon --env-file=src/.env"
   },
   "keywords": [],
@@ -19,8 +19,11 @@
     "express-rate-limit": "^8.2.1",
     "express-sanitizer": "^1.0.6",
     "helmet": "^8.1.0",
+    "jest": "^30.2.0",
     "jsonwebtoken": "^9.0.3",
+    "mongodb-memory-server": "^11.0.1",
     "mongoose": "^9.1.1",
+    "supertest": "^7.2.2",
     "winston": "^3.19.0",
     "zod": "^4.3.4"
   },
