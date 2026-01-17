@@ -10,18 +10,14 @@ export const registerService = async ({ name, email, password }) => {
     throw error(400, "All fields are required");
   }
 
-  // concurrent fetching for good optimization and performance
-  const [existingUser, hashedPassword] = await Promise.all([
-    users.findOne({ email }),
-    // hashpassword
-    bcrypt.hash(password, 10),
-  ]);
+  const existingUser = await users.findOne({ email });
 
   // check if user exists
   if (existingUser) {
     throw error(409, "User already exists");
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10);
   // create new user object
   const newUser = users.create({
     name,
@@ -43,6 +39,11 @@ export const loginService = async ({ email, password }) => {
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     throw error(401, "Invalid credentials");
+  }
+
+  // check if there is jwt secret
+  if (!JWT_SECRET) {
+    throw error(500, "JWT_SECRET is not defined");
   }
   const token = jwt.sign(
     { sub: { id: user._id, email: user.email } },
