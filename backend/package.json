@@ -4,7 +4,7 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watchAll",
+    "test": "vitest --watchAll",
     "dev": "nodemon --env-file=src/.env"
   },
   "keywords": [],
@@ -14,20 +14,23 @@
   "dependencies": {
     "@exortek/express-mongo-sanitize": "^1.1.1",
     "bcrypt": "^6.0.0",
+    "cloudinary": "^2.9.0",
     "cors": "^2.8.5",
     "express": "^5.2.1",
     "express-rate-limit": "^8.2.1",
     "express-sanitizer": "^1.0.6",
     "helmet": "^8.1.0",
-    "jest": "^30.2.0",
     "jsonwebtoken": "^9.0.3",
     "mongodb-memory-server": "^11.0.1",
     "mongoose": "^9.1.1",
+    "multer": "^2.0.2",
+    "sharp": "^0.34.5",
     "supertest": "^7.2.2",
     "winston": "^3.19.0",
     "zod": "^4.3.4"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "vitest": "^4.0.17"
   }
 }
